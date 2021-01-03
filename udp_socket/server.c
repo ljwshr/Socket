@@ -22,8 +22,14 @@ void dg_echo(int sockfd , struct sockaddr *pcliaddr , socklen_t clilen)
 			perror("recvfrom error");
 			exit(1);
 		}//if
-
-		if((n = sendto(sockfd , mesg , n , 0 , pcliaddr , len)) < 0)
+		
+		printf("n = %d \n",n); // n 是接收到的数据的长度.
+		printf("len = %d \n",len);
+		mesg[n] = 'O';
+		mesg[n+1] = 'K';
+		mesg[n+2] = '\0'; // 通过这种方式,可以对发送的回传的数据进行修改
+		
+		if((n = sendto(sockfd , mesg , n + 3 , 0 , pcliaddr , len)) < 0)
 		{
 			perror("sendto error");
 			exit(1);

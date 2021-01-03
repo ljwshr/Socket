@@ -37,6 +37,7 @@ int main(int argc , char **argv)
 {
 	int sockfd , t;
 	struct sockaddr_in servaddr;
+	printf("client start! \n");
 	if(argc != 2)
 	{
 		perror("usage: udpcli <IPaddress>");
@@ -57,7 +58,7 @@ int main(int argc , char **argv)
 		perror("socket error");
 		exit(1);
 	}//if
-
+	printf("client prepare to send message");
 	dg_cli(stdin , sockfd , (struct sockaddr *)&servaddr , sizeof(servaddr));
 	exit(0);
 } 
