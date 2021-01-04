@@ -11,12 +11,12 @@ int main(int argc , char **argv)
 
 	/*声明服务器监听套接字和客户端链接套接字*/
 	int listenfd , connfd;
-	pid_t childpid;
+	pid_t childpid; // 其实就是个进程号,是个int 类型的.只不过通过这个类型,能够判断出它的作用
 
 	/*声明缓冲区*/
 	char buf[MAX_LINE];
 
-	socklen_t clilen;
+	socklen_t clilen; // 本质上也是int, 为了清楚他的作用.
 
 	/*(1) 初始化监听套接字listenfd*/
 	if((listenfd = socket(AF_INET , SOCK_STREAM , 0)) < 0)
@@ -33,14 +33,14 @@ int main(int argc , char **argv)
 	servaddr.sin_port = htons(PORT);
 
 	/*(3) 绑定套接字和端口*/
-	if(bind(listenfd , (struct sockaddr*)&servaddr , sizeof(servaddr)) < 0)
+	if(bind(listenfd , (struct sockaddr*)&servaddr , sizeof(servaddr)) < 0) // 因为接口类型的原因,所以需要强转,然后进行操作.
 	{
 		perror("bind error");
 		exit(1);
 	}//if
 
 	/*(4) 监听客户请求*/
-	if(listen(listenfd , LISTENQ) < 0)
+	if(listen(listenfd , LISTENQ) < 0) // 监听相关的端口
 	{
 		perror("listen error");
 		exit(1);
@@ -65,11 +65,14 @@ int main(int argc , char **argv)
 			char buff[MAX_LINE];
 			while((n = read(connfd , buff , MAX_LINE)) > 0)
 			{
-				write(connfd , buff , n);
+				printf("n = %d \n",n);
+				buff[n] = 'O';
+				buff[n + 1] = 'K';
+				write(connfd , buff , (n + 2)); // 自己尝试再多回复两个字节
 			}
 			exit(0);
 		}//if
-		close(connfd);
+		close(connfd); // 父进程关闭,连接请求
 	}//for
 	
 	/*(6) 关闭监听套接字*/
